@@ -1,0 +1,40 @@
+#!/bin/bash
+
+t=tmp/${fn}_work
+
+if [[ -d "$t" ]];then
+  rm -rf $t
+fi
+mkdir $t -p
+
+if [ "${fn##*.}" == "zip" ];then
+  unzip download/$fn -d $t
+fi
+
+
+if [ "${fn#*.}" == "tar.gz" ];then
+  tar -xvf download/$fn -C $t
+fi
+
+
+name_prefix='ddb-'
+install=/usr/local/opt
+output=build
+sudo mkdir -p $install
+sudo mv $t/$name $install/
+
+fpm -f -s dir -t rpm --verbose --epoch 0 \
+ -p $output \
+ -n $name_prefix$name \
+ --category 'Development/Languages' \
+ --description '$name' \
+ --rpm-auto-add-directories \
+ --no-rpm-sign \
+ -C $install \
+ $install/$name
+
+if [[ -d "$install/$name" ]];then
+  echo "delete $install/$name" 
+  sudo rm -rf $install/$name 
+fi
+

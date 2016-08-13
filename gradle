@@ -1,0 +1,19 @@
+#!/bin/bash
+
+artifact=gradle
+version=2.14.1
+name=${artifact}-${version}
+fn=${name}-bin.zip
+
+dl=download/$fn
+if [[ ! -f "$dl" ]]; then
+  wget -O $dl https://services.gradle.org/distributions/$fn
+  if [[ ! -f "$dl"  ]]; then
+    echo "$fn download failed"
+    exit 1
+  fi
+fi
+
+. common
+
+
