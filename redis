@@ -1,0 +1,60 @@
+#!/bin/bash
+
+artifact=redis
+version=3.2.3
+name=${artifact}-${version}
+fn=${name}.tar.gz
+
+dl=download/$fn
+
+if [[ ! -f "$dl" ]]; then
+  wget -O $dl http://download.redis.io/releases/$fn
+  if [[ ! -f "$dl"  ]]; then
+    echo "$fn download failed"
+    exit 1
+  fi
+fi
+
+dir=`dirname $0`
+t=tmp/${fn}_work
+d=tmp/$name
+
+rm -rf $d
+mkdir -p $t
+mkdir -p $d
+
+## Build redis
+tar zxvf $dl -C $t
+cd $t/$name
+make
+cd - 
+## assembly redis
+list=(redis-server redis-cli redis-benchmark redis-sentinel redis-check-rdb mkreleasehdr.sh)
+pwd
+
+for i in "${list[@]}" ; do
+  cp $dir/$t/$name/src/$i $d
+done
+
+#. common
+
+name_prefix='ddb-'
+install=/usr/local/opt
+output=build
+
+fpm -f -s dir -t rpm --verbose --epoch 0 \
+ -p $output \
+ -n $name_prefix$name \
+ --url "https://info.evan.io" \
+ -m 'evan' \
+ --license 'MIT' \
+ --category 'Development/Languages' \
+ --description "$name" \
+ --rpm-auto-add-directories \
+ --no-rpm-sign $addition \
+ --workdir tmp \
+ --prefix $install \
+ -C tmp \
+ $name
+
+

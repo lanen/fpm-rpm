@@ -15,6 +15,11 @@ fi
 
 if [ "${fn#*.}" == "tar.gz" ];then
   tar -xvf download/$fn -C $t
+else
+  
+  if [ "${fn##*.}" == "gz" ];then
+     tar -xvf download/$fn -C $t
+  fi
 fi
 
 
@@ -29,7 +34,7 @@ fpm -f -s dir -t rpm --verbose --epoch 0 \
  -m 'evan' \
  --license 'MIT' \
  --category 'Development/Languages' \
- --description '$name' \
+ --description "$name" \
  --rpm-auto-add-directories \
  --no-rpm-sign $addition \
  --workdir tmp \
