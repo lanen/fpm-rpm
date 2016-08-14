@@ -15,6 +15,9 @@ if [[ ! -f "$dl" ]]; then
   fi
 fi
 
+
+addition="--template-value path_name=$name --template-value my_path_file=java.sh --template-value my_home=JAVA_HOME --template-scripts --after-install scripts/setpath "
+
 . common
 
 

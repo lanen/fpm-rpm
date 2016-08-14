@@ -7,6 +7,7 @@ if [[ -d "$t" ]];then
 fi
 mkdir $t -p
 
+# 解压
 if [ "${fn##*.}" == "zip" ];then
   unzip download/$fn -d $t
 fi
@@ -20,21 +21,19 @@ fi
 name_prefix='ddb-'
 install=/usr/local/opt
 output=build
-sudo mkdir -p $install
-sudo mv $t/$name $install/
 
 fpm -f -s dir -t rpm --verbose --epoch 0 \
  -p $output \
  -n $name_prefix$name \
+ --url "https://info.evan.io" \
+ -m 'evan' \
+ --license 'MIT' \
  --category 'Development/Languages' \
  --description '$name' \
  --rpm-auto-add-directories \
- --no-rpm-sign \
- -C $install \
- $install/$name
-
-if [[ -d "$install/$name" ]];then
-  echo "delete $install/$name" 
-  sudo rm -rf $install/$name 
-fi
+ --no-rpm-sign $addition \
+ --workdir tmp \
+ --prefix $install \
+ -C $t \
+ $name
 

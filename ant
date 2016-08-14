@@ -14,7 +14,7 @@ if [[ ! -f "$dl" ]]; then
     exit 1
   fi
 fi
-
+addition="--template-value path_name=$name --template-value my_path_file=ant.sh --template-value my_home=ANT_HOME --template-scripts --after-install scripts/setpath "
 . common
 
 

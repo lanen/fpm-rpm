@@ -1,0 +1,14 @@
+#!/bin/sh
+path_name=<%= path_name  %>
+my_path_file=/etc/profile.d/<%= my_path_file  %>
+my_home=<%= my_home  %>
+cat >$my_path_file <<"EOF"
+#!/bin/sh 
+
+export <%= my_home %>=<%= prefix %>/<%= path_name %>
+export PATH="$PATH:$<%= my_home %>/bin"
+
+EOF
+
+chmod +x $my_path_file
+source $my_path_file
