@@ -1,0 +1,60 @@
+#!/bin/bash
+
+artifact=openresty
+version=1.9.15.1
+name=${artifact}-${version}
+fn=${name}.tar.gz
+
+dl=download/$fn
+
+if [[ ! -f "$dl" ]]; then
+  wget -O $dl https://openresty.org/download/$fn
+  if [[ ! -f "$dl"  ]]; then
+    echo "$fn download failed"
+    exit 1
+  fi
+fi
+
+
+sudo yum install readline-devel pcre-devel openssl-devel -y
+
+dir=`pwd`
+t=tmp/${fn}_work
+d=tmp/${fn}_bin
+mkdir -p $t
+mkdir -p $d
+
+tmp_install=$dir/tmp/${fn}_install
+rm -rf $tmp_install
+mkdir -p $tmp_install
+echo $tmp_install
+## Build redis
+tar zxvf $dl -C $t
+cd $t/$name
+./configure --prefix=$tmp_install/$name
+make && make install
+cd -
+
+name_prefix='ddb-'
+install=/usr/local/opt
+output=build
+
+fpm -f -s dir -t rpm --verbose --epoch 0 \
+ -p $output \
+ -n $name_prefix$name \
+ --url "https://info.evan.io" \
+ -m 'evan' \
+ --license 'MIT' \
+ --category 'Development/Languages' \
+ --description "$name" \
+ --rpm-auto-add-directories \
+ --rpm-init scripts/init.d/openresty \
+ --no-rpm-sign $addition \
+ --workdir tmp \
+ --prefix $install \
+ -C $tmp_install \
+ $name
+
+#. common
+
+

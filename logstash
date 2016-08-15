@@ -1,0 +1,19 @@
+#!/bin/bash
+
+artifact=logstash
+version=2.3.4
+name=${artifact}-${version}
+fn=${name}.zip
+
+dl=download/$fn
+if [[ ! -f "$dl" ]]; then
+  wget -O $dl https://download.elastic.co/$artifact/$artifact/$fn
+  if [[ ! -f "$dl"  ]]; then
+    echo "$fn download failed"
+    exit 1
+  fi
+fi
+
+. common
+
+
