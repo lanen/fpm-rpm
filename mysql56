@@ -20,12 +20,10 @@ sudo yum install -y gcc-c++ cmake bison-devel  ncurses-devel
 
 dir=`pwd`
 t=tmp/${fn}_work
-d=tmp/${fn}_bin
 mkdir -p $t
-mkdir -p $d
 
 tmp_install=$dir/tmp/${fn}_install
-#rm -rf $tmp_install
+rm -rf $tmp_install
 mkdir -p $tmp_install
 ## Build redis
 if [ 'x' != 'b' ]; then

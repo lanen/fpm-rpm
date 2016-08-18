@@ -2,10 +2,10 @@
 
 artifact=kibana
 version=4.5.4
-name=${artifact}-${version}
-fn=${name}-linux-x64.tar.gz
+name=${artifact}-${version}-linux-x64
+fn=${artifact}-${version}-linux-x64.tar.gz
 
-https://download.elastic.co/kibana/kibana/kibana-4.5.4-linux-x64.tar.gz
+#https://download.elastic.co/kibana/kibana/kibana-4.5.4-linux-x64.tar.gz
 
 dl=download/$fn
 if [[ ! -f "$dl" ]]; then
